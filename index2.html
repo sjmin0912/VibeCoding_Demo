@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Vibe Coding - Mission Dashboard</title>
+    <script src="js/data.js"></script> <!-- 데이터 불러오기 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 배경 효과 */
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: radial-gradient(circle, #333 1px, transparent 1px);
+            opacity: 0.2;
+        }
+        
+        /* 카드 호버 효과 */
+        .mission-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(108, 92, 231, 0.5);
+        }
+        
+        /* 잠긴 카드 스타일 */
+        .locked {
+            filter: grayscale(100%);
+            opacity: 0.5;
+            pointer-events: none;
+            border: 1px solid #333;
+        }
+
+        /* 화살표 네비게이션 */
+        .nav-arrow {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: transparent;
+            color: rgba(255,255,255,0.35);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+            flex-shrink: 0;
+        }
+        .nav-arrow:hover:not([disabled]) {
+            border-color: rgba(108,92,231,0.7);
+            color: #fff;
+            background: rgba(108,92,231,0.1);
+        }
+        .nav-arrow[disabled] {
+            opacity: 0.18;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* 페이지 dot */
+        .page-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.18);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .page-dot.active {
+            background: #6C5CE7;
+            width: 22px;
+        }
+    </style>
+</head>
+<body class="bg-[#13131F] min-h-screen text-white relative overflow-x-hidden">
+
+    <!-- 배경 그리드 -->
+    <div class="fixed inset-0 bg-grid pointer-events-none"></div>
+
+    <!-- 1. HEADER (네비게이션) -->
+    <nav class="fixed top-0 w-full bg-[#1E1E2E]/80 backdrop-blur-md border-b border-gray-700 z-50 px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-cube text-[#6C5CE7] text-2xl"></i>
+            <span class="font-bold text-xl tracking-tight">Vibe Coding</span>
+        </div>
+        
+        <!-- 유저 프로필 요약 -->
+        <div class="flex items-center gap-6">
+            <div class="flex flex-col items-end">
+                <span class="text-xs text-gray-400">Total Progress</span>
+                <div class="w-32 h-2 bg-gray-700 rounded-full mt-1 overflow-hidden">
+                    <!-- 진도율 바 (예시: 12%) -->
+                    <div class="h-full bg-gradient-to-r from-[#6C5CE7] to-[#00E676] w-[12%]"></div>
+                </div>
+            </div>
+            <a href="mypage.html" class="flex items-center gap-3 hover:bg-[#252535] px-3 py-1.5 rounded-lg transition">
+                <div class="text-right">
+                    <p class="text-sm font-bold">학생 이름</p>
+                    <p class="text-xs text-[#00E676]">Lv.1 비기너</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#6C5CE7] to-[#00E676] flex items-center justify-center font-bold text-white shadow-lg">
+                    MJ
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 2. MAIN CONTENT -->
+    <main class="pt-28 pb-20 px-8 max-w-7xl mx-auto relative z-10">
+        
+        <header class="mb-12">
+            <h1 class="text-4xl font-extrabold mb-4">나의 미션 로드맵 🗺️</h1>
+            <p class="text-gray-400 text-lg">AI와 함께하는 8주간의 코딩 여행! 차근차근 정복해보세요.</p>
+        </header>
+
+        <!-- 미션 그리드 + 화살표 네비게이션 -->
+        <div class="flex items-center gap-4">
+
+            <!-- 이전 화살표 -->
+            <button id="btn-prev" class="nav-arrow" disabled onclick="changePage(-1)">
+                <i class="fa-solid fa-angle-left"></i>
+            </button>
+
+            <!-- 페이지별 카드 -->
+            <div class="flex-1">
+
+                <!-- PAGE 0: Chapter 1–3 -->
+                <div class="card-page grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <!-- Chapter 1: Active -->
+                    <div class="mission-card bg-[#1E1E2E] rounded-2xl border border-[#6C5CE7] p-1 relative overflow-hidden transition-all duration-300 group">
+                        <div class="h-48 rounded-xl relative overflow-hidden group-hover:opacity-95 transition">
+                            <img src="grassland.png" alt="신비한 사슴" class="absolute inset-0 w-full h-full object-cover scale-[1.04] group-hover:scale-[1.08] transition-transform duration-500">
+                            <!-- 아래에서 카드 배경색으로 녹아드는 그라데이션 -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#1E1E2E] via-[#1E1E2E]/40 to-transparent z-10"></div>
+                            <!-- 양쪽 사이드 블리드 -->
+                            <div class="absolute inset-0 bg-gradient-to-r from-[#1E1E2E]/50 via-transparent to-[#1E1E2E]/50 z-10"></div>
+                            <div class="absolute bottom-3 left-4 z-20">
+                                <span class="bg-[#6C5CE7] text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Chapter 1</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="text-2xl font-bold text-white group-hover:text-[#6C5CE7] transition">신비한 사슴</h2>
+                                <div class="flex text-yellow-500 text-sm gap-0.5" id="stars-week1">
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                                학교 방향으로 걷다 보니 신비한 사슴이 나타났다. 사슴은 조용히 고개를 돌려 숲 안쪽을 바라봤다.
+                                일단 따라가 볼까..?
+                            </p>
+                            <a href="mission_intro.html" class="block w-full text-center py-3 bg-[#6C5CE7] hover:bg-[#5A4AD1] text-white rounded-xl font-bold transition shadow-lg shadow-[#6C5CE7]/30">
+                                <i class="fa-solid fa-play mr-2"></i> 미션 시작하기
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 2: Locked -->
+                    <div class="mission-card locked bg-[#1E1E2E] rounded-2xl border border-gray-700 p-1 relative overflow-hidden">
+                        <div class="h-48 bg-[#13131F] rounded-xl relative flex items-center justify-center">
+                            <i class="fa-solid fa-lock text-4xl text-gray-600"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="text-2xl font-bold text-gray-500">낯선 사막 한 가운데</h2>
+                                <span class="text-xs bg-gray-700 px-2 py-1 rounded text-gray-400">Locked</span>
+                            </div>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">일단 물부터 찾아 나섰는데, 독사와 전갈이 나타나 길을 막기 시작했다. 과연 무사히 지나갈 수 있을까?</p>
+                            <button disabled class="block w-full text-center py-3 bg-gray-700 text-gray-400 rounded-xl font-bold cursor-not-allowed">1주차 완료 시 해제</button>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 3: Locked -->
+                    <div class="mission-card locked bg-[#1E1E2E] rounded-2xl border border-gray-700 p-1 relative overflow-hidden">
+                        <div class="h-48 bg-[#13131F] rounded-xl relative flex items-center justify-center">
+                            <i class="fa-solid fa-lock text-4xl text-gray-600"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="text-2xl font-bold text-gray-500">다섯 가지 수수께끼끼</h2>
+                                <span class="text-xs bg-gray-700 px-2 py-1 rounded text-gray-400">Locked</span>
+                            </div>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">다섯 머리가 번갈아 이야기를 나누더니, 수수께끼를 맞히면 길을 열어주겠단다. 설마 수수께끼도 다섯 개나 내는 건 아니겠지?
+                                </p>
+                            <button disabled class="block w-full text-center py-3 bg-gray-700 text-gray-400 rounded-xl font-bold cursor-not-allowed">2주차 완료 시 해제</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE 1: Chapter 4–6 -->
+                <div class="card-page hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <!-- Chapter 4: Locked -->
+                    <div class="mission-card locked bg-[#1E1E2E] rounded-2xl border border-gray-700 p-1 relative overflow-hidden">
+                        <div class="h-48 bg-[#13131F] rounded-xl relative flex items-center justify-center">
+                            <i class="fa-solid fa-lock text-4xl text-gray-600"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="text-2xl font-bold text-gray-500">발 밑을 조심해!</h2>
+                                <span class="text-xs bg-gray-700 px-2 py-1 rounded text-gray-400">Locked</span>
+                            </div>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">사슴을 따라가야 집으로 돌아갈 수 있다는 예감이 들던 그때, 땅이 울리는 소리가 나더니 바닥이 움직이기 시작했다.</p>
+                            <button disabled class="block w-full text-center py-3 bg-gray-700 text-gray-400 rounded-xl font-bold cursor-not-allowed">3주차 완료 시 해제</button>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 5: Locked -->
+                    <div class="mission-card locked bg-[#1E1E2E] rounded-2xl border border-gray-700 p-1 relative overflow-hidden">
+                        <div class="h-48 bg-[#13131F] rounded-xl relative flex items-center justify-center">
+                            <i class="fa-solid fa-lock text-4xl text-gray-600"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="text-2xl font-bold text-gray-500">도서관 전설</h2>
+                                <span class="text-xs bg-gray-700 px-2 py-1 rounded text-gray-400">Locked</span>
+                            </div>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">정리해야 할 책이 너무 많잖아! 그래도 사슴을 따라가려면 어딘가에 숨겨진 전설의 책을 찾아내야 할 것 같다.</p>
+                            <button disabled class="block w-full text-center py-3 bg-gray-700 text-gray-400 rounded-xl font-bold cursor-not-allowed">4주차 완료 시 해제</button>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 6: Locked -->
+                    <div class="mission-card locked bg-[#1E1E2E] rounded-2xl border border-gray-700 p-1 relative overflow-hidden">
+                        <div class="h-48 bg-[#13131F] rounded-xl relative flex items-center justify-center">
+                            <i class="fa-solid fa-lock text-4xl text-gray-600"></i>
+                        </div>
+                        <div class="p-6 flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="text-2xl font-bold text-gray-500">과거와 미래</h2>
+                                <span class="text-xs bg-gray-700 px-2 py-1 rounded text-gray-400">Locked</span>
+                            </div>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed flex-1">이내 하늘에서 불덩이가 떨어지더니 공룡은 흔적도 없이 사라졌다. 하지만 잠깐 사이 햇볕이 뜨거워지더니 모든 것이 사라져 버렸다.
+                            </p>
+                            <button disabled class="block w-full text-center py-3 bg-gray-700 text-gray-400 rounded-xl font-bold cursor-not-allowed">5주차 완료 시 해제</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE 2: Chapter 7–8 -->
+                <div class="card-page hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <!-- Chapter 7: Locked -->
+                    <div class="mission-card locked bg-[#1E1E2E] rounded-2xl border border-gray-700 p-1 relative overflow-hidden">
+                        <div class="h-48 bg-[#13131F] rounded-xl relative flex items-center justify-center">
+                            <i class="fa-solid fa-lock text-4xl text-gray-600"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="text-2xl font-bold text-gray-500">무한의 계단</h2>
+                                <span class="text-xs bg-gray-700 px-2 py-1 rounded text-gray-400">Locked</span>
+                            </div>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">끝이 보이지 않는 계단 끝에서 책이 기다리고 있다는 걸, 보이지 않아도 알 수 있었다. 나는 계단을 향해 걸음을 내딛었다.</p>
+                            <button disabled class="block w-full text-center py-3 bg-gray-700 text-gray-400 rounded-xl font-bold cursor-not-allowed">6주차 완료 시 해제</button>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 8: Locked -->
+                    <div class="mission-card locked bg-[#1E1E2E] rounded-2xl border border-gray-700 p-1 relative overflow-hidden">
+                        <div class="h-48 bg-[#13131F] rounded-xl relative flex items-center justify-center">
+                            <i class="fa-solid fa-lock text-4xl text-gray-600"></i>
+                        </div>
+                        <div class="p-6 flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="text-2xl font-bold text-gray-500">달라진 오늘</h2>
+                                <span class="text-xs bg-gray-700 px-2 py-1 rounded text-gray-400">Locked</span>
+                            </div>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed flex-1">손끝에 아직도 책의 감촉이 생생하게 남아 있는데도, 밖은 아무 일 없었다는 듯 평화로웠다. 책이 조용히 나를 부르고 있는 것 같다.</p>
+                            <button disabled class="block w-full text-center py-3 bg-gray-700 text-gray-400 rounded-xl font-bold cursor-not-allowed">7주차 완료 시 해제</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 다음 화살표 -->
+            <button id="btn-next" class="nav-arrow" onclick="changePage(1)">
+                <i class="fa-solid fa-angle-right"></i>
+            </button>
+        </div>
+
+        <!-- 페이지 dot 인디케이터 -->
+        <div class="flex justify-center items-center gap-2 mt-8">
+            <span class="page-dot active" onclick="changePage(0, true)"></span>
+            <span class="page-dot" onclick="changePage(1, true)"></span>
+            <span class="page-dot" onclick="changePage(2, true)"></span>
+        </div>
+
+    </main>
+
+    <script>
+        // ── 페이지네이션 ──────────────────────────────
+        let currentPage = 0;
+        const TOTAL_PAGES = 3;
+        const pages = document.querySelectorAll('.card-page');
+        const dots  = document.querySelectorAll('.page-dot');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+
+        function changePage(target, absolute = false) {
+            const next = absolute ? target : currentPage + target;
+            if (next < 0 || next >= TOTAL_PAGES) return;
+
+            pages[currentPage].classList.add('hidden');
+            dots[currentPage].classList.remove('active');
+
+            currentPage = next;
+
+            pages[currentPage].classList.remove('hidden');
+            dots[currentPage].classList.add('active');
+
+            btnPrev.disabled = currentPage === 0;
+            btnNext.disabled = currentPage === TOTAL_PAGES - 1;
+        }
+
+        // ── 별점 연동 ──────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof loadProgress === 'function') {
+                const data = loadProgress();
+                if (data && data.stars > 0) {
+                    const starContainer = document.getElementById('stars-week1');
+                    let html = '';
+                    for (let i = 0; i < data.stars; i++) html += '<i class="fa-solid fa-star"></i>';
+                    for (let i = data.stars; i < 3; i++) html += '<i class="fa-regular fa-star"></i>';
+                    starContainer.innerHTML = html;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

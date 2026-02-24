@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Vibe Coding - Mission Briefing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .neon-border { box-shadow: 0 0 15px rgba(108, 92, 231, 0.3), inset 0 0 15px rgba(108, 92, 231, 0.1); }
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .canvas-bg { background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #13131F; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        
+        /* 데모용 캔버스 스타일 */
+        canvas { display: block; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+    </style>
+</head>
+<body class="bg-[#13131F] h-screen text-white overflow-y-auto overflow-x-hidden flex flex-col relative">
+
+    <div class="fixed top-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#6C5CE7] rounded-full filter blur-[150px] opacity-10 pointer-events-none"></div>
+
+    <header class="h-16 flex items-center px-10 z-20 shrink-0">
+        <a href="index2.html" class="flex items-center gap-3 text-gray-400 hover:text-white transition group">
+            <div class="w-10 h-10 rounded-full bg-[#1E1E2E] flex items-center justify-center border border-gray-700 group-hover:border-[#6C5CE7] transition shadow-lg">
+                <i class="fa-solid fa-arrow-left text-sm group-hover:-translate-x-0.5 transition"></i>
+            </div>
+            <span class="text-sm font-bold tracking-wide">DASHBOARD</span>
+        </a>
+    </header>
+
+    <main class="flex-1 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 px-10 items-center justify-center pt-4 pb-12 relative z-10">
+        
+        <!-- LEFT: 설명 -->
+        <div class="space-y-8">
+            <div class="fade-in-up">
+                <div class="inline-flex items-center gap-2 mb-4">
+                    <span class="w-2 h-2 rounded-full bg-[#00E676] animate-pulse"></span>
+                    <span class="text-[#00E676] font-bold tracking-[0.2em] text-xs uppercase">Chapter 01 Ready</span>
+                </div>
+                <h1 class="text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#6C5CE7] to-[#A29BFE]">신비한 사슴</span>
+                </h1>
+                <p class="text-gray-400 text-lg leading-relaxed max-w-lg">
+                    해저 탐험을 마치고 온 엔트리는 또 사막을 탈출하게 되는데..!<br>
+                    오른쪽 화면을 오늘 구현해 볼거에요!
+                </p>
+            </div>
+
+            <!-- 학습 목표 카드 -->
+            <div class="fade-in-up delay-200">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-1 h-5 bg-[#6C5CE7] rounded-full"></div>
+                    <span class="text-sm font-bold text-gray-300 tracking-widest uppercase">학습 목표</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-4 p-4 bg-[#1E1E2E] border border-gray-700 rounded-2xl hover:border-[#6C5CE7] transition group cursor-default shadow-lg">
+                        <div class="w-10 h-10 rounded-xl bg-[#6C5CE7]/10 flex items-center justify-center text-xl shrink-0 group-hover:bg-[#6C5CE7] transition">🔊</div>
+                        <div>
+                            <p class="text-white font-semibold leading-snug">오브젝트에 소리를 추가하고 재생할 수 있어요.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 bg-[#1E1E2E] border border-gray-700 rounded-2xl hover:border-[#00E676] transition group cursor-default shadow-lg">
+                        <div class="w-10 h-10 rounded-xl bg-[#00E676]/10 flex items-center justify-center text-xl shrink-0 group-hover:bg-[#00E676] transition">📐</div>
+                        <div>
+                            <p class="text-white font-semibold leading-snug">X좌표와 Y좌표를 구분할 수 있어요.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 bg-[#1E1E2E] border border-gray-700 rounded-2xl hover:border-[#FDCB6E] transition group cursor-default shadow-lg">
+                        <div class="w-10 h-10 rounded-xl bg-[#FDCB6E]/10 flex items-center justify-center text-xl shrink-0 group-hover:bg-[#FDCB6E] transition">✏️</div>
+                        <div>
+                            <p class="text-white font-semibold leading-snug">벡터 모드에서 오브젝트의 모양을 원하는대로 수정할 수 있어요.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 fade-in-up delay-300">
+                <a href="index.html" class="inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-[#6C5CE7] to-[#5A4AD1] text-white font-bold text-xl rounded-2xl shadow-[0_0_30px_rgba(108,92,231,0.4)] hover:shadow-[0_0_50px_rgba(108,92,231,0.6)] hover:-translate-y-1 transition transform group">
+                    <span class="mr-3">🚀 프로젝트 시작하기</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- RIGHT: 데모 영상 -->
+        <div class="flex justify-center items-center h-full fade-in-up delay-100 relative">
+            <div class="absolute w-[500px] h-[500px] bg-gradient-to-tr from-[#6C5CE7] to-transparent rounded-full opacity-10 blur-3xl -z-10 animate-pulse"></div>
+
+            <div class="relative bg-[#0F0F16] border-4 border-[#252535] rounded-3xl shadow-2xl p-3 w-[440px] max-w-full transform rotate-2 hover:rotate-0 transition duration-500 group">
+                <div class="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-6 bg-[#1E1E2E] rounded-b-xl z-20"></div>
+
+                <!-- 영상 영역 -->
+                <div class="aspect-video bg-black rounded-xl overflow-hidden relative border border-gray-800">
+                    <video
+                        id="demoVideo"
+                        class="w-full h-full object-cover"
+                        src="../forest2.mp4"
+                        loop
+                        playsinline
+                        preload="metadata"
+                    ></video>
+
+                    <!-- 오버레이 (시작 전) -->
+                    <div id="videoOverlay" class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center backdrop-blur-[2px] transition-opacity duration-300 cursor-pointer" onclick="playVideo()">
+                        <div class="w-20 h-20 bg-[#6C5CE7] rounded-full flex items-center justify-center text-white text-3xl shadow-2xl hover:scale-110 transition">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </div>
+                        <p class="text-white font-bold mt-4 animate-pulse">클릭해서 미리보기</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute -right-6 top-10 bg-white text-[#13131F] px-4 py-2 rounded-xl rounded-bl-none font-bold text-sm shadow-xl transform rotate-6 animate-bounce">
+                미리보기 🎬
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 영상 플레이어 로직 -->
+    <script>
+        const video = document.getElementById('demoVideo');
+        const overlay = document.getElementById('videoOverlay');
+
+        function playVideo() {
+            video.play();
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // 영상 클릭 시 일시정지 + 오버레이 복원
+        video.addEventListener('click', () => {
+            video.pause();
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+        });
+    </script>
+</body>
+</html>
